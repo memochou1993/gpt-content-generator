@@ -1,34 +1,30 @@
 <script setup>
 import { computed, reactive } from 'vue';
-
-const MOOD_TYPES = [
-  { text: '專業', value: '專業' },
-  { text: '有趣', value: '有趣' },
-  { text: '嚴肅', value: '嚴肅' },
-];
-
-const FORMAT_TYPES = [
-  { text: '段落', value: '段落' },
-  { text: '郵件', value: '郵件' },
-  { text: '文章', value: '文章' },
-  { text: '詩詞', value: '詩詞' },
-];
-
-const LENGTH_TYPES = [
-  { text: '短', value: '100' },
-  { text: '中', value: '250' },
-  { text: '長', value: '500' },
-];
+import {
+  createCompletion, newClient, PARTICIPANT_AI, PARTICIPANT_HUMAN, FINISH_REASON_LENGTH,
+} from '../assets/openai';
+import {
+  MOOD_TYPES,
+  FORMAT_TYPES,
+  LENGTH_TYPES,
+} from '../constants';
 
 const data = reactive({
+  loading: false,
   key: atob(localStorage.getItem('key') || ''),
-  topic: '',
+  topic: localStorage.getItem('topic') || '',
   moodTypes: [MOOD_TYPES[0]],
   formatType: FORMAT_TYPES[0],
   lengthType: LENGTH_TYPES[0],
+  result: '',
+  finishReason: '',
 });
 
-const updateKey = () => {
+const rememberTopic = () => {
+  localStorage.setItem('topic', data.topic);
+};
+
+const rememberKey = () => {
   localStorage.setItem('key', btoa(data.key));
 };
 
@@ -47,10 +43,27 @@ const selectLengthType = (lengthType) => {
 };
 
 const promptMoods = computed(() => data.moodTypes.map(({ value }) => value).join('、'));
-const prompt = computed(() => `使用「${data.topic}」為題材，以「${promptMoods.value}」的語氣，生成約 ${data.lengthType.value} 字的${data.formatType.text}。`);
+const prompt = computed(() => `使用「${data.topic}」為題材，以「${promptMoods.value}」的語氣，生成一段不超過 ${data.lengthType.value} 字的${data.formatType.text}。`);
 
-const generate = () => {
-  console.log(prompt.value);
+const resetContent = () => {
+  data.result = '';
+  data.finishReason = '';
+};
+
+const generateContent = async ({ reset = true }) => {
+  data.loading = true;
+  if (reset) resetContent();
+  const client = newClient(data.key);
+  const res = await createCompletion(client)({
+    prompt: `${PARTICIPANT_HUMAN}: ${prompt.value}\n${PARTICIPANT_AI}: ${data.result}`,
+    maxTokens: data.lengthType.value * 4,
+  });
+  const { choices } = res.data;
+  const [choice] = choices;
+  const { text, finish_reason: finishReason } = choice;
+  data.result += text.trim();
+  data.finishReason = finishReason;
+  data.loading = false;
 };
 </script>
 
@@ -78,6 +91,7 @@ const generate = () => {
                 no-resize
                 rows="3"
                 variant="outlined"
+                @input="rememberTopic"
               />
             </div>
           </div>
@@ -147,7 +161,7 @@ const generate = () => {
                 hide-details
                 type="password"
                 variant="outlined"
-                @input="updateKey"
+                @input="rememberKey"
               />
             </div>
           </div>
@@ -158,9 +172,9 @@ const generate = () => {
             block
             color="indigo"
             variant="outlined"
-            @click="generate"
+            @click="generateContent"
           >
-            產生草稿
+            生成草稿
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -179,16 +193,43 @@ const generate = () => {
               預覽
             </div>
             <div>
+              <v-sheet
+                v-if="data.loading"
+                color="blue-grey-lighten-5"
+                height="400"
+                class="d-flex justify-center align-center"
+              >
+                <v-progress-circular
+                  color="indigo"
+                  indeterminate
+                  size="75"
+                  class="my-12"
+                />
+              </v-sheet>
               <v-textarea
+                v-else
+                v-model="data.result"
                 color="indigo"
                 hide-details
                 no-resize
-                rows="9"
+                rows="15"
                 variant="outlined"
+                style="height: 400px"
               />
             </div>
           </div>
         </v-card-item>
+        <v-card-actions class="justify-end pa-8 pt-0">
+          <v-btn
+            v-if="data.finishReason === FINISH_REASON_LENGTH"
+            block
+            color="indigo"
+            variant="outlined"
+            @click="generateContent({ reset: false })"
+          >
+            繼續
+          </v-btn>
+        </v-card-actions>
       </v-card>
     </v-col>
   </v-row>
