@@ -1,14 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-
-defineProps({
-  title: {
-    type: String,
-    default: '',
-  },
-});
-
-const count = ref(0);
+//
 </script>
 
 <template>
@@ -16,10 +7,11 @@ const count = ref(0);
     <v-col cols="12" sm="10" md="6">
       <v-card
         color="blue-grey-lighten-5"
+        height="100%"
       >
         <v-card-item class="pa-8">
           <div class="text-h5 mb-8 font-weight-bold text-indigo">
-            文案產生器
+            文案生成器
           </div>
           <div class="my-4">
             <div class="title mb-2">
@@ -98,10 +90,25 @@ const count = ref(0);
     <v-col cols="12" sm="10" md="6">
       <v-card
         color="blue-grey-lighten-5"
+        height="100%"
       >
         <v-card-item class="pa-8">
           <div class="text-h5 mb-8 font-weight-bold text-indigo">
             生成結果
+          </div>
+          <div class="my-4">
+            <div class="title mb-2">
+              預覽
+            </div>
+            <div>
+              <v-textarea
+                color="indigo"
+                hide-details
+                no-resize
+                rows="9"
+                variant="outlined"
+              />
+            </div>
           </div>
         </v-card-item>
       </v-card>

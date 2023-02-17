@@ -4,7 +4,13 @@ import ContentGenerator from './components/ContentGenerator.vue';
 
 <template>
   <v-app>
-    <v-main class="bg-blue-grey-lighten-1 py-12">
+    <v-toolbar
+      dark
+      density="compact"
+    >
+      <v-toolbar-title>GPT Copywriter</v-toolbar-title>
+    </v-toolbar>
+    <v-main class="d-flex align-center bg-blue-grey-lighten-1">
       <v-container>
         <ContentGenerator />
       </v-container>
