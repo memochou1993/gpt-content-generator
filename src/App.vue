@@ -17,7 +17,7 @@ import ContentGenerator from './components/ContentGenerator.vue';
         <v-col class="text-center">
           Powered by
           <span class="font-weight-medium">
-            <a href="https://github.com/memochou1993/gpt-copywriter" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/memochou1993/gpt-content-generator" target="_blank" rel="noopener noreferrer">
               GPT Content Generator
             </a>
           </span>
