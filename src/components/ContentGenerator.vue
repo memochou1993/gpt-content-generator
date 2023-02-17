@@ -43,8 +43,7 @@ const selectLengthType = (lengthType) => {
   data.lengthType = lengthType;
 };
 
-const promptMoods = computed(() => data.moodTypes.map(({ value }) => value).join('、'));
-const prompt = computed(() => `使用「${data.topic}」為題材，以「${promptMoods.value}」的語氣，生成一段不超過 ${data.lengthType.value} 字的${data.formatType.text}。`);
+const prompt = computed(() => `使用「${data.topic}」為題材，以「${data.moodTypes.map(({ value }) => value).join('、')}」的語氣，生成一段不超過 ${data.lengthType.value} 字的${data.formatType.text}。`);
 
 const resetContent = () => {
   data.result = '';
@@ -75,6 +74,7 @@ const generateContent = async ({ reset = true }) => {
 <template>
   <v-snackbar
     v-if="data.error"
+    color="indigo-lighten-1"
     model-value
     @update:modelValue="data.error = ''"
   >
@@ -180,7 +180,6 @@ const generateContent = async ({ reset = true }) => {
         </v-card-item>
         <v-card-actions class="justify-end pa-8 pt-0">
           <v-btn
-            :disabled="!data.topic || !data.key"
             block
             color="indigo"
             variant="outlined"
