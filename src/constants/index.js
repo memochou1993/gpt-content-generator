@@ -1,8 +1,8 @@
 export const MOOD_TYPES = [
-  { text: '專業', value: '專業' },
   { text: '有趣', value: '有趣' },
   { text: '嚴肅', value: '嚴肅' },
   { text: '溫馨', value: '溫馨' },
+  { text: '專業', value: '專業' },
 ];
 
 export const FORMAT_TYPES = [

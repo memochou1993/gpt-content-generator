@@ -4,18 +4,23 @@ import ContentGenerator from './components/ContentGenerator.vue';
 
 <template>
   <v-app>
-    <v-toolbar density="compact">
-      <v-toolbar-title>AI 文案生成器</v-toolbar-title>
-    </v-toolbar>
-    <v-main class="d-flex align-center bg-blue-grey-lighten-1 py-8">
-      <v-container>
+    <v-app-bar density="compact" elevation="2">
+      <v-app-bar-title>AI 文案生成器</v-app-bar-title>
+    </v-app-bar>
+    <v-main class="d-flex align-center bg-blue-grey-lighten-1">
+      <v-container class="py-16">
         <ContentGenerator />
       </v-container>
     </v-main>
     <v-footer color="blue-grey-lighten-5">
-      <v-row>
+      <v-row no-gutters>
         <v-col class="text-center">
-          Powered by gpt-copywriter
+          Powered by
+          <span class="font-weight-medium">
+            <a href="https://github.com/memochou1993/gpt-copywriter" target="_blank" rel="noopener noreferrer">
+              GPT Content Generator
+            </a>
+          </span>
         </v-col>
       </v-row>
     </v-footer>

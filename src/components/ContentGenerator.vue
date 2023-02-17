@@ -18,6 +18,7 @@ const data = reactive({
   lengthType: LENGTH_TYPES[0],
   result: '',
   finishReason: '',
+  error: '',
 });
 
 const rememberTopic = () => {
@@ -54,29 +55,40 @@ const generateContent = async ({ reset = true }) => {
   data.loading = true;
   if (reset) resetContent();
   const client = newClient(data.key);
-  const res = await createCompletion(client)({
-    prompt: `${PARTICIPANT_HUMAN}: ${prompt.value}\n${PARTICIPANT_AI}: ${data.result}`,
-    maxTokens: data.lengthType.value * 4,
-  });
-  const { choices } = res.data;
-  const [choice] = choices;
-  const { text, finish_reason: finishReason } = choice;
-  data.result += text.trim();
-  data.finishReason = finishReason;
+  try {
+    const res = await createCompletion(client)({
+      prompt: `${PARTICIPANT_HUMAN}: ${prompt.value}\n${PARTICIPANT_AI}: ${data.result}`,
+      maxTokens: data.lengthType.value * 4,
+    });
+    const { choices } = res.data;
+    const [choice] = choices;
+    const { text, finish_reason: finishReason } = choice;
+    data.result += text.trim();
+    data.finishReason = finishReason;
+  } catch (err) {
+    data.error = err?.response?.data?.error?.message || err.message;
+  }
   data.loading = false;
 };
 </script>
 
 <template>
+  <v-snackbar
+    v-if="data.error"
+    model-value
+    @update:modelValue="data.error = ''"
+  >
+    {{ data.error }}
+  </v-snackbar>
   <v-row class="justify-center column">
     <v-col cols="12" sm="10" md="6">
       <v-card
         color="blue-grey-lighten-5"
         height="100%"
       >
-        <v-card-item class="pa-8">
+        <v-card-item class="pa-8 pb-4">
           <div class="text-h5 mb-8 font-weight-bold text-indigo">
-            文案生成
+            生成參數
           </div>
           <div class="my-4">
             <div class="title mb-2">
@@ -174,7 +186,7 @@ const generateContent = async ({ reset = true }) => {
             variant="outlined"
             @click="generateContent"
           >
-            生成草稿
+            生成
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -184,7 +196,7 @@ const generateContent = async ({ reset = true }) => {
         color="blue-grey-lighten-5"
         height="100%"
       >
-        <v-card-item class="pa-8">
+        <v-card-item class="pa-8 pb-4">
           <div class="text-h5 mb-8 font-weight-bold text-indigo">
             生成結果
           </div>
