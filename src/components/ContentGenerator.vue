@@ -76,7 +76,7 @@ const generateContent = async ({ reset = true }) => {
       >
         <v-card-item class="pa-8">
           <div class="text-h5 mb-8 font-weight-bold text-indigo">
-            文案生成器
+            文案生成
           </div>
           <div class="my-4">
             <div class="title mb-2">
