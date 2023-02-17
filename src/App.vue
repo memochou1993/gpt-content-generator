@@ -5,7 +5,7 @@ import ContentGenerator from './components/ContentGenerator.vue';
 <template>
   <v-app>
     <v-app-bar density="compact" elevation="2">
-      <v-app-bar-title>AI 文案生成器</v-app-bar-title>
+      <v-app-bar-title>AI 內容生成器</v-app-bar-title>
     </v-app-bar>
     <v-main class="d-flex align-center bg-blue-grey-lighten-1">
       <v-container class="py-16">
