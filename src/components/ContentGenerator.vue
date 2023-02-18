@@ -56,7 +56,7 @@ const generateContent = async ({ reset = true }) => {
   const client = newClient(data.key);
   try {
     const res = await createCompletion(client)({
-      prompt: `${PARTICIPANT_HUMAN}: ${prompt.value}\n${PARTICIPANT_AI}: ${data.result}`,
+      prompt: `${PARTICIPANT_AI}: 我會使用繁體中文。\n${PARTICIPANT_HUMAN}: ${prompt.value}\n${PARTICIPANT_AI}: ${data.result}`,
       maxTokens: data.lengthType.value * 4,
     });
     const { choices } = res.data;
