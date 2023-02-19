@@ -2,7 +2,7 @@
 import { computed, reactive } from 'vue';
 import {
   createCompletion, newClient, PARTICIPANT_AI, PARTICIPANT_HUMAN, FINISH_REASON_LENGTH,
-} from '../assets/openai';
+} from '../services/openai';
 import {
   MOOD_TYPES,
   FORMAT_TYPES,
